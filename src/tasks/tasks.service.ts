@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { TaksStatus, Task } from './task.model';
 import { v4 as uuid } from 'uuid';
 import { CreateTaskDto } from './dto/create-task.dto';
+import { FilterTaskDTO } from './dto/filter-task.dto';
 /*
     TasksSevice owns the business logic
 
@@ -37,5 +38,30 @@ export class TasksService {
   deleteTaskByID(id: string): void {
     const index = this.tasks.findIndex((task) => task.id === id);
     this.tasks.splice(index, 1);
+  }
+
+  updateTask(id: string, status: TaksStatus): Task | undefined {
+    const task = this.tasks.find((task) => task.id === id);
+    if (task) task.status = status;
+    return task;
+  }
+
+  getTasksWithFilters(filterTaskDTO: FilterTaskDTO): Task[] {
+    const { status, search } = filterTaskDTO;
+    let tasks = this.getAllTaks();
+
+    if (status) {
+      tasks = tasks.filter((task) => task.status === status);
+    }
+
+    if (search) {
+      tasks = tasks.filter((task) => {
+        if (task.description.includes(search) || task.title.includes(search))
+          return true;
+        return false;
+      });
+    }
+
+    return tasks;
   }
 }
