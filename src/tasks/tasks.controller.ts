@@ -47,11 +47,9 @@ export class TasksController {
     return this.tasksService.getAllTaks();
   }
   @Get('/:id')
-  getTaskByID(@Param('id') id: string): Task | string {
+  getTaskByID(@Param('id') id: string): Task {
     console.log('id', id);
-    const task: Task | undefined = this.tasksService.getTaskByID(id);
-    if (task) return task;
-    return 'task does not exist';
+    return this.tasksService.getTaskByID(id);
   }
   /*
     entire request body goes to the parameter after the @Body decorator
