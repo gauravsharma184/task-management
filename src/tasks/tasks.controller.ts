@@ -18,6 +18,18 @@ import { FilterTaskDTO } from './dto/filter-task.dto';
     We will import task service for some reason will figure it out
 
 */
+/*
+  ##Nest JS pipes
+    pipes operate on the arguments which are to be processed by the handler
+    pipes can perform data transformation or validation
+    pipes return data either modified or unmodified and pass it to the route handler
+    pipes can throw exceptions
+  
+  TYPES OF PIPES
+    1>Parameter level pipes
+    2>Handler-level pipes
+
+*/
 
 @Controller('tasks')
 export class TasksController {

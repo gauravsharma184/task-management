@@ -8,8 +8,12 @@
   # DTO can be defined as classes or interfaces, the recommended approach is to use classes
 
 */
+import { IsNotEmpty } from 'class-validator';
 
 export class CreateTaskDto {
+  @IsNotEmpty()
   title: string;
+
+  @IsNotEmpty()
   description: string;
 }
