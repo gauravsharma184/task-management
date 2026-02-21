@@ -42,13 +42,13 @@ export class TasksService {
   }
 
   deleteTaskByID(id: string): void {
-    const index = this.tasks.findIndex((task) => task.id === id);
-    this.tasks.splice(index, 1);
+    const found = this.getTaskByID(id);
+    this.tasks = this.tasks.filter((task) => task.id !== found.id);
   }
 
-  updateTask(id: string, status: TaksStatus): Task | undefined {
+  updateTask(id: string, status: TaksStatus): Task {
     const task = this.getTaskByID(id);
-    if (task) task.status = status;
+    task.status = status;
     return task;
   }
 
