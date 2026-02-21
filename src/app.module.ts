@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TasksModule } from './tasks/tasks.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
 /*
 
   A module is a class that is annotated with the @Module decorator
@@ -14,10 +15,24 @@ import { TasksModule } from './tasks/tasks.module';
 
   An angular service is a typescript class decorated with @Injectable which makes an instance of the class available to be injected as a dependency
 
+  #TypeORM
+  .forRoot used to connect to the databse
+
 
 */
 @Module({
-  imports: [TasksModule],
+  imports: [TasksModule, 
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: 'localhost',
+      port: 5432,
+      username: 'postgres',
+      password: 'postgres',
+      database: 'task_management',
+      autoLoadEntities: true,
+      synchronize: true,
+    })
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
