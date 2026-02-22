@@ -1,5 +1,8 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { EntityRepository, Repository, DataSource } from 'typeorm';
 import { Task } from './task.entity';
+import { CreateTaskDto } from './dto/create-task.dto';
+import { TaksStatus } from './task-status.enum';
+import { Injectable } from '@nestjs/common';
 
 /*
     //able to maintain more readable code using Data Mapper
@@ -16,5 +19,22 @@ import { Task } from './task.entity';
 
 
 */
-@EntityRepository(Task)
-export class TaskRepository extends Repository<Task> {}
+@Injectable()
+export class TaskRepository extends Repository<Task> {
+    constructor(private dataSource: DataSource) {
+        super(Task, dataSource.createEntityManager());
+      }
+    async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
+        const { title, description } = createTaskDto;
+    //first we create an object based on the repository the task is not being saved in the database
+        const task = this.create({
+        title,
+        description,
+        status: TaksStatus.OPEN,
+        });
+
+        //now we will save the task into the database
+        await this.save(task);
+        return task;
+        }
+}
