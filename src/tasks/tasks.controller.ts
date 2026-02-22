@@ -13,6 +13,7 @@ import type { TaksStatus } from './task-status.enum';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { FilterTaskDTO } from './dto/filter-task.dto';
 import { UpdateTaskDTO } from './dto/update-task.dto';
+import { Task } from './task.entity';
 
 /*
 
@@ -60,6 +61,10 @@ export class TasksController {
   // /*
   //   entire request body goes to the parameter after the @Body decorator
   // */
+  @Post()
+  async createTask(@Body() createTaskDto: CreateTaskDto): Promise<Task> {
+    return this.tasksService.createTask(createTaskDto);
+  }
   // @Post()
   // createTask(@Body() createTaskDto: CreateTaskDto): Task {
   //   return this.tasksService.createTask(createTaskDto);
@@ -83,5 +88,4 @@ export class TasksController {
   //   const status = updateTaskDto.status;
   //   return this.tasksService.updateTask(id, status);
   // }
-  
 }

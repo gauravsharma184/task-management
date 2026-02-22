@@ -21,6 +21,19 @@ export class TasksService {
   // getAllTaks(): Task[] {
   //   return this.tasks;
   // }
+  async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
+    const { title, description } = createTaskDto;
+    //first we create an object based on the repository the task is not being saved in the database
+    const task = this.tasksRepository.create({
+      title,
+      description,
+      status: TaksStatus.OPEN,
+    });
+
+    //now we will save the task into the database
+    await this.tasksRepository.save(task);
+    return task;
+  }
   // createTask(createTaskDto: CreateTaskDto): Task {
   //   const { title, description } = createTaskDto;
   //   const task: Task = {
@@ -33,7 +46,7 @@ export class TasksService {
   //   return task;
   // }
   async getTaskByID(id: string): Promise<Task> {
-    const found = await this.tasksRepository.findOne({where: {id: id}});
+    const found = await this.tasksRepository.findOne({ where: { id: id } });
 
     if (!found) {
       throw new NotFoundException(`Task with ${id} not found`);
