@@ -6,35 +6,26 @@ import { FilterTaskDTO } from './dto/filter-task.dto';
 import { TaskRepository } from './task.repository';
 import { Task } from './task.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { DeleteResult } from 'typeorm';
+import { UpdateTaskDTO } from './dto/update-task.dto';
 /*
     TasksSevice owns the business logic
 
     in ts for a class when you define a method its access is public by default
 
+    in classes, no function keyword is required
+
 */
 @Injectable()
 export class TasksService {
-  constructor(
-   
-    private tasksRepository: TaskRepository,
-  ) {}
-  // getAllTaks(): Task[] {
-  //   return this.tasks;
-  // }
-   createTask(createTaskDto: CreateTaskDto): Promise<Task> {
+  constructor(private tasksRepository: TaskRepository) {}
+
+  createTask(createTaskDto: CreateTaskDto): Promise<Task> {
     return this.tasksRepository.createTask(createTaskDto);
-   }
-  // createTask(createTaskDto: CreateTaskDto): Task {
-  //   const { title, description } = createTaskDto;
-  //   const task: Task = {
-  //     id: uuid(),
-  //     title,
-  //     description,
-  //     status: TaksStatus.OPEN,
-  //   };
-  //   this.tasks.push(task);
-  //   return task;
-  // }
+  }
+  async getTasks(filterTaskDto: FilterTaskDTO): Promise<Task[]> {
+    return this.tasksRepository.getTasks(filterTaskDto);
+  }
   async getTaskByID(id: string): Promise<Task> {
     const found = await this.tasksRepository.findOne({ where: { id: id } });
 
@@ -44,35 +35,21 @@ export class TasksService {
 
     return found;
   }
-  // getTaskByID(id: string): Task {
-  //   const found = this.tasks.find((task) => task.id === id);
-  //   if (!found) {
-  //     throw new NotFoundException(`Task with ${id} not found`);
-  //   }
-  //   return found;
-  // }
-  // deleteTaskByID(id: string): void {
-  //   const found = this.getTaskByID(id);
-  //   this.tasks = this.tasks.filter((task) => task.id !== found.id);
-  // }
-  // updateTask(id: string, status: TaksStatus): Task {
-  //   const task = this.getTaskByID(id);
-  //   task.status = status;
-  //   return task;
-  // }
-  // getTasksWithFilters(filterTaskDTO: FilterTaskDTO): Task[] {
-  //   const { status, search } = filterTaskDTO;
-  //   let tasks = this.getAllTaks();
-  //   if (status) {
-  //     tasks = tasks.filter((task) => task.status === status);
-  //   }
-  //   if (search) {
-  //     tasks = tasks.filter((task) => {
-  //       if (task.description.includes(search) || task.title.includes(search))
-  //         return true;
-  //       return false;
-  //     });
-  //   }
-  //   return tasks;
-  // }
+  async deleteTaskByID(id: string): Promise<DeleteResult> {
+    const result = await this.tasksRepository.delete(id);
+    console.log(result);
+    if (result.affected === 0)
+      throw new NotFoundException(`Taks with ${id} not found`);
+    return result;
+    //.delete method does not check wether the entity exists or not
+    // in the remove method you can not pass a null object , so need to fetch the task from the db, one more call
+  }
+  async updateTask(id: string, updateTaskDto: UpdateTaskDTO): Promise<Task> {
+    const { status } = updateTaskDto;
+    const task = await this.getTaskByID(id);
+    console.log('task:', task);
+    task.status = status;
+    await this.tasksRepository.save(task);
+    return task;
+  }
 }
