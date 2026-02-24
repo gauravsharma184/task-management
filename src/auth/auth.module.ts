@@ -1,0 +1,20 @@
+import { Module } from '@nestjs/common';
+import { AuthController } from './auth.controller';
+import { AuthService } from './auth.service';
+import { User } from './user.entity';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { UserRepository } from './user.repository';
+/*
+    nest g module <module_name> creates a folder with <module_name> with a file <module_name>.module.ts
+    nest g service <module_name> creates a file <module_name>.service.ts
+    nest g controller <module_name> creates a file <module_name>.controller.ts
+    ask what save conflict means?
+
+*/
+
+@Module({
+  imports: [TypeOrmModule.forFeature([User])],
+  providers: [AuthService, UserRepository],
+  controllers: [AuthController],
+})
+export class AuthModule {}

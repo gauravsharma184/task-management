@@ -7,6 +7,8 @@ import { ValidationPipe } from '@nestjs/common';
   data from a database, using an object oriented paradigm, using an object-oriented paradigm
   rather than sending raw queries
 
+  the library used will be TypeORM
+
 */
 
 async function bootstrap() {

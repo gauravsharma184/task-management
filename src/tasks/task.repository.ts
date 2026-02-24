@@ -1,4 +1,4 @@
-import { EntityRepository, Repository, DataSource } from 'typeorm';
+import { Repository, DataSource } from 'typeorm';
 import { Task } from './task.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { TaksStatus } from './task-status.enum';

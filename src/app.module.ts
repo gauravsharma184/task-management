@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TasksModule } from './tasks/tasks.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from './auth/auth.module';
 /*
 
   A module is a class that is annotated with the @Module decorator
@@ -21,7 +22,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 */
 @Module({
-  imports: [TasksModule, 
+  imports: [
+    TasksModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
@@ -31,7 +33,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       database: 'task_management',
       autoLoadEntities: true,
       synchronize: true,
-    })
+    }),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
