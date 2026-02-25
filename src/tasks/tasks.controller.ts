@@ -1,5 +1,6 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -8,6 +9,7 @@ import {
   Post,
   Query,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -16,6 +18,8 @@ import { UpdateTaskDTO } from './dto/update-task.dto';
 import { Task } from './task.entity';
 import { DeleteResult } from 'typeorm';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { GetUser } from 'src/auth/user.decorator';
+import { User } from 'src/auth/user.entity';
 
 /*
 
@@ -34,8 +38,9 @@ import { AuthGuard } from 'src/auth/auth.guard';
     2>Handler-level pipes
 
 */
-@UseGuards(AuthGuard)
+
 @Controller('tasks')
+@UseGuards(AuthGuard)
 export class TasksController {
   //we are defining tasksService as a private member of the TasksController class
   constructor(private tasksService: TasksService) {}
@@ -56,8 +61,12 @@ export class TasksController {
   //   entire request body goes to the parameter after the @Body decorator
   // */
   @Post()
-  async createTask(@Body() createTaskDto: CreateTaskDto): Promise<Task> {
-    return this.tasksService.createTask(createTaskDto);
+  @UseInterceptors(ClassSerializerInterceptor)
+  async createTask(
+    @Body() createTaskDto: CreateTaskDto,
+    @GetUser() user: User,
+  ): Promise<Task> {
+    return this.tasksService.createTask(createTaskDto, user);
   }
 
   @Delete('/:id')

@@ -20,29 +20,33 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    console.log('context', context);
+    // console.log('context', context);
     //switchToHttp().getRequest() returns the reference to the the incoming request
     const request = context.switchToHttp().getRequest();
     // console.log('request', request);
     const token = this.extractTokenfromHeader(request);
+    console.log('token:', token);
 
     if (!token) {
       throw new UnauthorizedException();
     }
 
     try {
-      const payload = await this.jwtService.verifyAsync(token);
+      console.log('reached at line 35');
+      const payload = await this.jwtService.verifyAsync(token,{secret: 'gaurav'});
       console.log('payload', payload);
       const { username } = payload;
       console.log('username', username);
       const user = await this.userRepsoitory.findOne({
         where: { username: username },
       });
+      console.log('reached at line 42');
       console.log('user from db', user);
 
       // we are assigning the payload to the request object here
       request['user'] = user;
-    } catch {
+    } catch (err) {
+      console.log(err);
       throw new UnauthorizedException();
     }
     return true;

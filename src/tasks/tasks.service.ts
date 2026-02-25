@@ -5,6 +5,7 @@ import { TaskRepository } from './task.repository';
 import { Task } from './task.entity';
 import { DeleteResult } from 'typeorm';
 import { UpdateTaskDTO } from './dto/update-task.dto';
+import { User } from 'src/auth/user.entity';
 /*
     TasksSevice owns the business logic
 
@@ -17,8 +18,8 @@ import { UpdateTaskDTO } from './dto/update-task.dto';
 export class TasksService {
   constructor(private tasksRepository: TaskRepository) {}
 
-  createTask(createTaskDto: CreateTaskDto): Promise<Task> {
-    return this.tasksRepository.createTask(createTaskDto);
+  createTask(createTaskDto: CreateTaskDto, user: User): Promise<Task> {
+    return this.tasksRepository.createTask(createTaskDto, user);
   }
   async getTasks(filterTaskDto: FilterTaskDTO): Promise<Task[]> {
     return this.tasksRepository.getTasks(filterTaskDto);

@@ -4,6 +4,7 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { TaksStatus } from './task-status.enum';
 import { Injectable } from '@nestjs/common';
 import { FilterTaskDTO } from './dto/filter-task.dto';
+import { User } from 'src/auth/user.entity';
 
 /*
     //able to maintain more readable code using Data Mapper
@@ -30,8 +31,9 @@ export class TaskRepository extends Repository<Task> {
     const { status, search } = filterTaskDto;
     const query = this.createQueryBuilder('task');
     // console.log('query:', query);
+    
     if (status) {
-      query.where('task.status = :status', { status });
+      query.andWhere('task.status = :status', { status });
     }
 
     if (search) {
@@ -45,13 +47,14 @@ export class TaskRepository extends Repository<Task> {
 
     return tasks;
   }
-  async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
+  async createTask(createTaskDto: CreateTaskDto, user: User): Promise<Task> {
     const { title, description } = createTaskDto;
     //first we create an object based on the repository the task is not being saved in the database
     const task = this.create({
       title,
       description,
       status: TaksStatus.OPEN,
+      user,
     });
 
     //now we will save the task into the database
