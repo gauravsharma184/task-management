@@ -27,11 +27,13 @@ export class TaskRepository extends Repository<Task> {
     //we are calling the constructor of the parent class here passing the task entity and another function
     super(Task, dataSource.createEntityManager());
   }
-  async getTasks(filterTaskDto: FilterTaskDTO): Promise<Task[]> {
+  async getTasks(filterTaskDto: FilterTaskDTO, user: User): Promise<Task[]> {
     const { status, search } = filterTaskDto;
     const query = this.createQueryBuilder('task');
     // console.log('query:', query);
-    
+    console.log('user task repo', user);
+    query.where({user});
+    console.log('query for getting all tasks:', query);
     if (status) {
       query.andWhere('task.status = :status', { status });
     }
