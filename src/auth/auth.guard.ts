@@ -6,15 +6,24 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserRepository } from './user.repository';
+/*
+  CanActivate is an interface 
+  implements keyword is used such that class strictly follows the structure of CanActivate interface
+
+*/
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private jwtService: JwtService, private userRepsoitory:UserRepository) {}
+  constructor(
+    private jwtService: JwtService,
+    private userRepsoitory: UserRepository,
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     console.log('context', context);
+    //switchToHttp().getRequest() returns the reference to the the incoming request
     const request = context.switchToHttp().getRequest();
-    console.log('request', request);
+    // console.log('request', request);
     const token = this.extractTokenfromHeader(request);
 
     if (!token) {
@@ -26,7 +35,9 @@ export class AuthGuard implements CanActivate {
       console.log('payload', payload);
       const { username } = payload;
       console.log('username', username);
-      const user = await this.userRepsoitory.findOne({where: {username: username}});
+      const user = await this.userRepsoitory.findOne({
+        where: { username: username },
+      });
       console.log('user from db', user);
 
       // we are assigning the payload to the request object here
@@ -42,7 +53,3 @@ export class AuthGuard implements CanActivate {
     return type === 'Bearer' ? token : undefined;
   }
 }
-
-
-
-

@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UserRepository } from './user.repository';
 import { AuthCredentialsDTO } from './dto/auth-credentials.dto';
 import { JwtService } from '@nestjs/jwt';
@@ -37,8 +41,10 @@ export class AuthService {
   }
 
   async getUser(username: string): Promise<User> {
-    const user = await this.userRepository.findOne({where : {username: username}});
-    if(!user) throw new NotFoundException();
+    const user = await this.userRepository.findOne({
+      where: { username: username },
+    });
+    if (!user) throw new NotFoundException();
     return user;
   }
 }

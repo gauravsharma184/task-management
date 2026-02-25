@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -14,6 +15,7 @@ import { FilterTaskDTO } from './dto/filter-task.dto';
 import { UpdateTaskDTO } from './dto/update-task.dto';
 import { Task } from './task.entity';
 import { DeleteResult } from 'typeorm';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 /*
 
@@ -32,7 +34,7 @@ import { DeleteResult } from 'typeorm';
     2>Handler-level pipes
 
 */
-
+@UseGuards(AuthGuard)
 @Controller('tasks')
 export class TasksController {
   //we are defining tasksService as a private member of the TasksController class
