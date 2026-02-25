@@ -11,7 +11,7 @@ export class User {
 
   @Column()
   password: string;
-
-  @OneToMany(() => Task, (task) => task.user)
+  //eager set to true loads the main enity witht the relation: which owns the relationship (the table which has the foreign key is called the main enitity)
+  @OneToMany(() => Task, (task) => task.user, {eager: true})
   tasks: Task[];
 }

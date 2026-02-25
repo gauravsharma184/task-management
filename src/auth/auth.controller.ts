@@ -22,7 +22,7 @@ export class AuthController {
   @Get('/user')
   getUser(@Request() req): Promise<User> {
     console.log('user body', req.user);
-    const { username } = req.user;
+    const { username } = req.user; // replacement of req.user.username with destructuring the object
     return this.authService.getUser(username);
   }
 }
