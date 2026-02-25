@@ -4,6 +4,7 @@ import { AuthService } from './auth.service';
 import { User } from './user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserRepository } from './user.repository';
+import { JwtModule } from '@nestjs/jwt';
 /*
     nest g module <module_name> creates a folder with <module_name> with a file <module_name>.module.ts
     nest g service <module_name> creates a file <module_name>.service.ts
@@ -13,7 +14,10 @@ import { UserRepository } from './user.repository';
 */
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User])],
+  imports: [
+    TypeOrmModule.forFeature([User]),
+    JwtModule.register({ secret: 'gaurav' }),
+  ],
   providers: [AuthService, UserRepository],
   controllers: [AuthController],
 })

@@ -33,15 +33,6 @@ export class UserRepository extends Repository<User> {
     }
   }
 
-  async isValidUser(authCredentialsDto: AuthCredentialsDTO): Promise<string> {
-    const { username, password } = authCredentialsDto;
-    const user = await this.findOne({ where: {username: username} });
-
-    if (user && (await bcrpyt.compare(password, user.password))) {
-      return 'success';
-    } else {
-      throw new UnauthorizedException('please check your login credentials');
-    }
-  }
+  
   
 }
