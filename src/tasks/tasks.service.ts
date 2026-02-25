@@ -24,8 +24,9 @@ export class TasksService {
   async getTasks(filterTaskDto: FilterTaskDTO, user: User): Promise<Task[]> {
     return this.tasksRepository.getTasks(filterTaskDto, user);
   }
-  async getTaskByID(id: string): Promise<Task> {
-    const found = await this.tasksRepository.findOne({ where: { id: id } });
+  async getTaskByID(id: string, user: User): Promise<Task> {
+    const found = await this.tasksRepository.findOne({ where: { id: id, user: user } });
+    console.log(found);
 
     if (!found) {
       throw new NotFoundException(`Task with ${id} not found`);
@@ -42,9 +43,9 @@ export class TasksService {
     //.delete method does not check wether the entity exists or not
     // in the remove method you can not pass a null object , so need to fetch the task from the db, one more call
   }
-  async updateTask(id: string, updateTaskDto: UpdateTaskDTO): Promise<Task> {
+  async updateTask(id: string, updateTaskDto: UpdateTaskDTO, user: User): Promise<Task> {
     const { status } = updateTaskDto;
-    const task = await this.getTaskByID(id);
+    const task = await this.getTaskByID(id, user);
     console.log('task:', task);
     task.status = status;
     await this.tasksRepository.save(task);

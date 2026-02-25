@@ -46,15 +46,18 @@ export class TasksController {
   constructor(private tasksService: TasksService) {}
   //controller for localhost3000/tasks/aksfalhsdjfhalskdf
   @Get()
-  getTasks(@Query() filterTaskDto: FilterTaskDTO, @GetUser() user: User): Promise<Task[]> {
+  getTasks(
+    @Query() filterTaskDto: FilterTaskDTO,
+    @GetUser() user: User,
+  ): Promise<Task[]> {
     console.log('filterTaskDto:', filterTaskDto);
     return this.tasksService.getTasks(filterTaskDto, user);
   }
 
   @Get('/:id')
-  getTaskById(@Param('id') id: string) {
+  getTaskById(@Param('id') id: string, @GetUser() user: User) {
     console.log('id', id);
-    return this.tasksService.getTaskByID(id);
+    return this.tasksService.getTaskByID(id, user);
   }
 
   // /*
@@ -83,8 +86,9 @@ export class TasksController {
   updateTask(
     @Param('id') id: string,
     @Body() updateTaskDto: UpdateTaskDTO,
+    @GetUser() user: User
   ): Promise<Task> {
     console.log('id:', id);
-    return this.tasksService.updateTask(id, updateTaskDto);
+    return this.tasksService.updateTask(id, updateTaskDto, user);
   }
 }

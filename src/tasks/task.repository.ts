@@ -32,7 +32,7 @@ export class TaskRepository extends Repository<Task> {
     const query = this.createQueryBuilder('task');
     // console.log('query:', query);
     console.log('user task repo', user);
-    query.where({user});
+    query.where({ user });
     console.log('query for getting all tasks:', query);
     if (status) {
       query.andWhere('task.status = :status', { status });
@@ -40,7 +40,7 @@ export class TaskRepository extends Repository<Task> {
 
     if (search) {
       query.andWhere(
-        'LOWER(task.title) like LOWER(:search) OR LOWER(task.description) like LOWER(:search)',
+        '(LOWER(task.title) like LOWER(:search) OR LOWER(task.description) like LOWER(:search))',
         { search: `%${search}%` },
       );
     }
